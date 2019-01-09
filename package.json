@@ -1,0 +1,19 @@
+{
+  "name": "image-to-sound",
+  "version": "1.0.0",
+  "description": "A web app which converts an image into sound using Hilbert curves",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Alex Garrett",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "path": "^0.12.7"
+  }
+}
