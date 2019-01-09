@@ -1,4 +1,4 @@
-import {make2dArray, getBaseInterval, makeFrequencySpectrum,} from './image-conversion.js';
+import {makeFrequencySpectrum,} from './image-conversion.js';
 
 window.onload = () => {
     const canvas = document.getElementById("canvas");
@@ -6,9 +6,7 @@ window.onload = () => {
     const image = document.getElementById("source");
     ctx.drawImage(image, 0, 0);
 
-    const imgData = make2dArray(canvas);
-    const interval = getBaseInterval(imgData, 260);
-    const frequencies = makeFrequencySpectrum(imgData, interval);
+    const frequencies = makeFrequencySpectrum(canvas);
     console.log("done");
     console.log(frequencies);
 }

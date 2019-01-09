@@ -1,6 +1,6 @@
 /* Takes a canvas an returns a 2D array of the canvas's image data,
    converted to greyscale for simplicity */
-export function make2dArray(canvas) {
+function make2dArray(canvas) {
     const width = canvas.width;
     const height = canvas.height;
     const ctx = canvas.getContext("2d");
@@ -26,7 +26,7 @@ export function make2dArray(canvas) {
 /* Takes a 2D array and a pitch range (a number: max pitch / min pitch),
    and divides this range into a number of equal intervals based on the
    dimensions of the input array. It returns the size of the interval. */
-export function getBaseInterval(arr, range) {
+function getBaseInterval(arr, range) {
     const height = arr.length;
     const width = arr[0].length;
 
@@ -46,13 +46,6 @@ export function getBaseInterval(arr, range) {
    
    N must be a power of 2. */
 function getHilbertNode(index, N) {
-    if ((N === 0) || ((N & (N-1)) !== 0)) {
-        throw new TypeError("N must be a power of 2");
-    }
-    if (index >= N*N) {
-        throw new TypeError("Index must be less than N*N");
-    }
-    
     const positions = [
         [0, 0],
         [0, 1],
@@ -97,22 +90,22 @@ function getHilbertNode(index, N) {
 }
 
 
-/* Takes image data and a base interval and generates an array of frequencies
-   and amplitudes, where each pixel in the image gets a freq / amp pair. The
-   path the algorithm traverses is a Hilbert Curve, and the distance between
-   each frequency is the base interval. The amplitudes is based on the luma
-   of each pixel. */
-export function makeFrequencySpectrum(arr, interval) {
-    const N = arr.length;
+/* Takes a canvas and converts its image data to a set of frequency / amplitude
+   pairs. It walks through the data along a Hilbert Curve to generate this
+   set */
+export function makeFrequencySpectrum(canvas) {
+    const imgData = make2dArray(canvas);
+    const N = imgData.length;
+    const interval = getBaseInterval(imgData, 260); // 260 is ratio of highest to lowest frequency
 
     let [x, y] = getHilbertNode(0, N);
     let freq = 50;
-    let amp = arr[x][y] 
+    let amp = imgData[x][y] 
     let output = [[freq, amp]];
     for (let i=1; i < N*N; i++) {
         [x, y] = getHilbertNode(i, N);
         freq = freq*interval;
-        amp = arr[x][y];
+        amp = imgData[x][y];
         output.push([freq, amp]);
     }
 
