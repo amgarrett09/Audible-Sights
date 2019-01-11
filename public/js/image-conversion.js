@@ -40,12 +40,19 @@ function getBaseInterval(arr, range) {
 
 
 /* Takes an index and a number N and returns the coordinates of the 
-   ith node in an order-N Hilbert Curve. Based on Marcin Chwedczuk's solution,
+   ith node in an N by N Hilbert Curve. Based on Marcin Chwedczuk's solution,
    which can be found here: 
    https://marcin-chwedczuk.github.io/iterative-algorithm-for-drawing-hilbert-curve
    
    N must be a power of 2. */
 function getHilbertNode(index, N) {
+    if ((N === 0) || ((N & (N-1)) !== 0)) {
+        throw new TypeError("N must be a power of 2");
+    }
+    if (index >= N*N) {
+        throw new TypeError("Index must be less than N*N");
+    }
+    
     const positions = [
         [0, 0],
         [0, 1],
@@ -92,7 +99,7 @@ function getHilbertNode(index, N) {
 
 /* Takes a canvas and converts its image data to a set of frequency / amplitude
    pairs. It walks through the data along a Hilbert Curve to generate this
-   set */
+   set. Frequencies range from 50Hz to 13000Hz. */
 export function makeFrequencySpectrum(canvas) {
     const imgData = make2dArray(canvas);
     const N = imgData.length;
@@ -100,12 +107,12 @@ export function makeFrequencySpectrum(canvas) {
 
     let [x, y] = getHilbertNode(0, N);
     let freq = 50;
-    let amp = imgData[x][y] 
+    let amp = imgData[x][y] / 255; 
     let output = [[freq, amp]];
     for (let i=1; i < N*N; i++) {
         [x, y] = getHilbertNode(i, N);
         freq = freq*interval;
-        amp = imgData[x][y];
+        amp = imgData[x][y] / 255;
         output.push([freq, amp]);
     }
 
