@@ -36,6 +36,8 @@ function make2dArray(canvas) {
     return output;
 }
 
+/* Calculates the interval between each pitch based on the height of the image
+   and a range, which is the ratio of the highest pitch to the lowest pitch */
 function getBaseInterval(arr, range) {
     const height = arr[0].length;
     if (height <= 1) {
