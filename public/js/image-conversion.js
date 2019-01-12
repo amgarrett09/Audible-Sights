@@ -14,7 +14,7 @@ export function getGainsAndPitches(canvas) {
     return [gains, pitches];
 }
 
-function make2dArray(canvas) {
+export function make2dArray(canvas) {
     const width = canvas.width;
     const height = canvas.height;
     const ctx = canvas.getContext("2d");
@@ -38,7 +38,7 @@ function make2dArray(canvas) {
 
 /* Calculates the interval between each pitch based on the height of the image
    and a range, which is equal to max pitch / min pitch */
-function getBaseInterval(arr, range) {
+export function getBaseInterval(arr, range) {
     const height = arr[0].length;
     if (height <= 1) {
         return 1;
@@ -48,7 +48,7 @@ function getBaseInterval(arr, range) {
     return Math.pow(range, exp);
 }
 
-function getPitches(arr, baseInterval) {
+export function getPitches(arr, baseInterval) {
     if (arr.length === 0 || arr[0].length === 0) {
         return [];
     }
