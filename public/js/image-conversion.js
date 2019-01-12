@@ -64,4 +64,3 @@ function getPitches(arr, baseInterval) {
 
     return output;
 }
-
