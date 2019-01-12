@@ -7,7 +7,6 @@ window.onload = () => {
     ctx.drawImage(image, 0, 0);
 
     const [gains, pitches] = getGainsAndPitches(canvas, 100, 3200);
-    console.log(pitches);
     
     const audioCtx = new AudioContext();
     const synths = pitches.map(() => audioCtx.createOscillator());
@@ -21,9 +20,10 @@ window.onload = () => {
         synths[i].connect(gainControllers[i]);
     }
 
-    gainControllers.forEach(gain => gain.gain.value = 1/128);
-
-    gainControllers.forEach(gain => gain.connect(masterGain));
+    gainControllers.forEach(gain => {
+        gain.gain.value = 1/128
+        gain.connect(masterGain)
+    });
 
     masterGain.gain.value = 0.5;
 

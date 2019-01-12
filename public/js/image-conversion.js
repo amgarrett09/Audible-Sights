@@ -4,9 +4,15 @@
     Each "row" in the 2D array actually corresponds to a column of the image,
     making it easier to scan the image data in columns from left to right. */
 export function getGainsAndPitches(canvas, minPitch, maxPitch) {
+    if (minPitch == 0 || maxPitch == 0) {
+        throw new Error("minPitch and maxPitch must not be zero");
+    } else if (minPitch >= maxPitch) {
+        throw new Error("minPitch must be less than maxPitch");
+    }
+
     const imgData = make2dArray(canvas);
-    const gains = imgData.map(list => {
-        return list.map(e => e/255);
+    const gains = imgData.map(arr => {
+        return arr.map(e => e/255);
     });
     const pitches = getPitches(imgData, minPitch, maxPitch);
 
@@ -49,7 +55,7 @@ export function getBaseInterval(arr, minPitch, maxPitch) {
 }
 
 /* Returns a list of pitches in descending order from maxPitch to minPitch.
-The number of pitches is based on the height of each column of the image data */
+The number of pitches is based on the height the image. */
 export function getPitches(arr, minPitch, maxPitch) {
     if (arr.length === 0 || arr[0].length === 0) {
         return [];
