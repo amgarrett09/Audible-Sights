@@ -1,7 +1,7 @@
 {
   "name": "image-to-sound",
   "version": "1.0.0",
-  "description": "A web app which converts an image into sound using Hilbert curves",
+  "description": "A web app which maps the spatial information in an image to sound",
   "main": "app.js",
   "scripts": {
     "test": "jest"
