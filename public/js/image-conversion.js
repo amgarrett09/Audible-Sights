@@ -3,13 +3,12 @@
 
     Each "row" in the 2D array actually corresponds to a column of the image,
     making it easier to scan the image data in columns from left to right. */
-export function getGainsAndPitches(canvas) {
+export function getGainsAndPitches(canvas, minPitch, maxPitch) {
     const imgData = make2dArray(canvas);
-    const interval = getBaseInterval(imgData, 32);
     const gains = imgData.map(list => {
         return list.map(e => e/255);
     });
-    const pitches = getPitches(imgData, interval);
+    const pitches = getPitches(imgData, minPitch, maxPitch);
 
     return [gains, pitches];
 }
@@ -36,10 +35,11 @@ export function make2dArray(canvas) {
     return output;
 }
 
-/* Calculates the interval between each pitch based on the height of the image
-   and a range, which is equal to max pitch / min pitch */
-export function getBaseInterval(arr, range) {
+/* Calculates the interval between each pitch based on the height of the image,
+a minimum pitch, and a maximum pitch */
+export function getBaseInterval(arr, minPitch, maxPitch) {
     const height = arr[0].length;
+    const range = maxPitch / minPitch;
     if (height <= 1) {
         return 1;
     }
@@ -48,13 +48,16 @@ export function getBaseInterval(arr, range) {
     return Math.pow(range, exp);
 }
 
-export function getPitches(arr, baseInterval) {
+/* Returns a list of pitches in descending order from maxPitch to minPitch.
+The number of pitches is based on the height of each column of the image data */
+export function getPitches(arr, minPitch, maxPitch) {
     if (arr.length === 0 || arr[0].length === 0) {
         return [];
     }
 
     const output = Array(arr[0].length);
-    let freq = 3200;
+    const baseInterval = getBaseInterval(arr, minPitch, maxPitch);
+    let freq = maxPitch;
     output[0] = freq;
 
     for (let i = 1; i < output.length; i++) {
