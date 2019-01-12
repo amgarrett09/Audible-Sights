@@ -1,72 +1,62 @@
-function getHilbertNode(index, N) {
-    if ((N === 0) || ((N & (N-1)) !== 0)) {
-        throw new TypeError("N must be a power of 2");
+/* Takes a canvas an returns a 2D array of the canvas's image data,
+   converted to greyscale for simplicity */
+function make2dArray(canvas) {
+    const width = canvas.width;
+    const height = canvas.height;
+    const ctx = canvas.getContext("2d");
+
+    if (width*height === 1) {
+        const pixel = ctx.getImageData(0, 0, 1, 1).data;
+        return [0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2]];
     }
-    if (index >= N*N) {
-        throw new TypeError("Index must be less than N*N");
-    }
     
-    const positions = [
-        [0, 0],
-        [0, 1],
-        [1, 1],
-        [1, 0]
-    ];
-
-    let temp = positions[(index & 3)] // position based on last two bits of index
-    let [x, y] = [temp[0], temp[1]];
-    
-    index = (index >>> 2);
-    
-
-    for (let n = 4; n <= N; n *= 2) {
-        const n2 = n / 2;
-
-        switch (index & 3) {
-            case 0:
-                temp = x; 
-                x = y; 
-                y = temp;
-                break;
-            case 1:
-                x = x;
-                y = y + n2;
-                break;
-            case 2:
-                x = x + n2;
-                y = y + n2;
-                break;
-            case 3:
-                temp = y;
-                y = (n2-1) - x;
-                x = (n2-1) - temp;
-                x = x + n2;
-                break;
+    let output = Array(width).fill().map(() => Array(height));
+    for (let i=0; i < width; i++) {
+        for (let j=0; j < height; j++) {
+            const pixel = ctx.getImageData(i, j, 1, 1).data;
+            // Conversion to greyscale using CCIR 601 method
+            const y = 0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2];
+            output[i][j] = y;
         }
-
-        index = (index >>> 2);
     }
-    return [x, y]; 
+    return output;
 }
 
-test('Get the 7th node of an order 4 Hilber Curve', () => {
-    expect(getHilbertNode(7, 4)).toEqual([1,2]);
+function getBaseInterval(arr, range) {
+    const height = arr[0].length;
+    if (height <= 1) {
+        return 1;
+    }
+    
+    const exp = 1 / height;
+    return Math.pow(range, exp);
+}
+
+function getPitches(arr, baseInterval) {
+    if (arr.length === 0 || arr[0].length === 0) {
+        return [];
+    }
+
+    const output = Array(arr[0].length);
+    let freq = 100;
+    output[0] = freq;
+
+    for (let i = 1; i < output.length; i++) {
+        freq *= baseInterval;
+        output[i] = freq;
+    }
+
+    return output;
+}
+
+
+
+test("Test getBaseInterval with empty 2d array", () => {
+    expect(getBaseInterval([[]], 32)).toBe(1);
 });
-test('Get the 13th node of an order 4 Hilber Curve', () => {
-    expect(getHilbertNode(13, 4)).toEqual([2,1]);
+test("Test getPitches with empty array", () => {
+    expect(getPitches([], 1.027)).toEqual([]);
 });
-test('Get the 2nd node of an order 2 Hilber Curve', () => {
-    expect(getHilbertNode(2, 2)).toEqual([1,1]);
-});
-test('Get the 55th node of an order 8 Hilber Curve', () => {
-    expect(getHilbertNode(55, 8)).toEqual([5,2]);
-});
-test('Get the 8th node of an order 8 Hilber Curve', () => {
-    expect(getHilbertNode(8, 8)).toEqual([2,2]);
-});
-test('Get the 15th node of an order 8 Hilber Curve', () => {
-    expect(getHilbertNode(15, 8)).toEqual([0,3]);
-});
-test('Get the 1st node of an order 8 Hilber Curve', () => {
-    expect(getHilbertNode(1, 8)).toEqual([0,1]);
+test("Test getPitches with empty 2d array", () => {
+    expect(getPitches([[]], 1.027)).toEqual([]);
 });
