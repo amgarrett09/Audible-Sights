@@ -1,5 +1,8 @@
-/* Takes a canvas, converts it to a 2D array of image data, and then returns
-   an array of gain values and an array of pitches based on the data. */
+/* Takes a canvas and returns a 2D array of gain values (generated from the luma
+    of each pixed of the canvas), and an array of pitches in descending order.
+
+    Each "row" in the 2D array actually corresponds to a column of the image,
+    making it easier to scan the image data by columns from left to right. */
 export function getGainsAndPitches(canvas) {
     const imgData = make2dArray(canvas);
     const interval = getBaseInterval(imgData, 32);
@@ -18,7 +21,7 @@ function make2dArray(canvas) {
 
     if (width*height === 1) {
         const pixel = ctx.getImageData(0, 0, 1, 1).data;
-        return [0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2]];
+        return [[0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2]]];
     }
     
     let output = Array(width).fill().map(() => Array(height));
@@ -39,7 +42,7 @@ function getBaseInterval(arr, range) {
         return 1;
     }
     
-    const exp = 1 / height;
+    const exp = 1 / (height - 1);
     return Math.pow(range, exp);
 }
 
@@ -49,11 +52,11 @@ function getPitches(arr, baseInterval) {
     }
 
     const output = Array(arr[0].length);
-    let freq = 100;
+    let freq = 3200;
     output[0] = freq;
 
     for (let i = 1; i < output.length; i++) {
-        freq *= baseInterval;
+        freq /= baseInterval;
         output[i] = freq;
     }
 
