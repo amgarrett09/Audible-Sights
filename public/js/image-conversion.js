@@ -2,7 +2,7 @@
     of each pixed of the canvas), and an array of pitches in descending order.
 
     Each "row" in the 2D array actually corresponds to a column of the image,
-    making it easier to scan the image data by columns from left to right. */
+    making it easier to scan the image data in columns from left to right. */
 export function getGainsAndPitches(canvas) {
     const imgData = make2dArray(canvas);
     const interval = getBaseInterval(imgData, 32);
