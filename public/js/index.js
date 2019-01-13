@@ -32,6 +32,5 @@ window.onload = () => {
         audio.stop()
         clearTimeout(timeout);
     });
-
 }
 

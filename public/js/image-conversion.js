@@ -5,7 +5,7 @@ class AudioState {
         this.pitches = pitches;
         this.synths = synths;
         this.gainControllers = gainControllers;
-        this .masterGain = masterGain;
+        this.masterGain = masterGain;
     }
 
     initialize() {
