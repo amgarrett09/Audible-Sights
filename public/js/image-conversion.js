@@ -1,25 +1,40 @@
 /* Takes a canvas and returns a 2D array of gain values (generated from the luma
-    of each pixed of the canvas), and an array of pitches in descending order.
+    of each pixed of the canvas).
 
     Each "row" in the 2D array actually corresponds to a column of the image,
     making it easier to scan the image data in columns from left to right. */
-export function getGainsAndPitches(canvas, minPitch, maxPitch) {
+export function getGains(canvas) {
+    const imgData = make2dArray(canvas);
+    const gains = imgData.map(arr => {
+        return arr.map(e => e/255);
+    });
+
+    return gains;
+}
+
+/* Returns a list of pitches in descending order from maxPitch to minPitch.
+The number of pitches is based on the height the image. */
+export function getPitches(canvas, minPitch, maxPitch) {
     if (minPitch == 0 || maxPitch == 0) {
         throw new Error("minPitch and maxPitch must not be zero");
     } else if (minPitch >= maxPitch) {
         throw new Error("minPitch must be less than maxPitch");
     }
 
-    const imgData = make2dArray(canvas);
-    const gains = imgData.map(arr => {
-        return arr.map(e => e/255);
-    });
-    const pitches = getPitches(imgData, minPitch, maxPitch);
+    const output = Array(canvas.height);
+    const baseInterval = getBaseInterval(canvas.height, minPitch, maxPitch);
+    let freq = maxPitch;
+    output[0] = freq;
 
-    return [gains, pitches];
+    for (let i = 1; i < output.length; i++) {
+        freq /= baseInterval;
+        output[i] = freq;
+    }
+
+    return output;
 }
 
-export function make2dArray(canvas) {
+function make2dArray(canvas) {
     const width = canvas.width;
     const height = canvas.height;
     const ctx = canvas.getContext("2d");
@@ -27,6 +42,8 @@ export function make2dArray(canvas) {
     if (width*height === 1) {
         const pixel = ctx.getImageData(0, 0, 1, 1).data;
         return [[0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2]]];
+    } else if (width*height === 0) {
+        return [[]];
     }
     
     let output = Array(width).fill().map(() => Array(height));
@@ -43,8 +60,7 @@ export function make2dArray(canvas) {
 
 /* Calculates the interval between each pitch based on the height of the image,
 a minimum pitch, and a maximum pitch */
-export function getBaseInterval(arr, minPitch, maxPitch) {
-    const height = arr[0].length;
+function getBaseInterval(height, minPitch, maxPitch) {
     const range = maxPitch / minPitch;
     if (height <= 1) {
         return 1;
@@ -52,24 +68,4 @@ export function getBaseInterval(arr, minPitch, maxPitch) {
     
     const exp = 1 / (height - 1);
     return Math.pow(range, exp);
-}
-
-/* Returns a list of pitches in descending order from maxPitch to minPitch.
-The number of pitches is based on the height the image. */
-export function getPitches(arr, minPitch, maxPitch) {
-    if (arr.length === 0 || arr[0].length === 0) {
-        return [];
-    }
-
-    const output = Array(arr[0].length);
-    const baseInterval = getBaseInterval(arr, minPitch, maxPitch);
-    let freq = maxPitch;
-    output[0] = freq;
-
-    for (let i = 1; i < output.length; i++) {
-        freq /= baseInterval;
-        output[i] = freq;
-    }
-
-    return output;
 }
