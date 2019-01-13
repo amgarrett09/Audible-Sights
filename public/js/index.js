@@ -29,6 +29,27 @@ class AudioState {
 
         this.synths.forEach(synth => synth.start(0));
     }
+
+    play() {
+        this.masterGain.connect(this.audioCtx.destination);
+    }
+
+    stop() {
+        this.masterGain.disconnect(this.audioCtx.destination);
+    }
+}
+
+function createAudioFromCanvas(canvas) {
+    const audioCtx = new AudioContext();
+    const gains = getGains(canvas);
+    const pitches = getPitches(canvas, 100, 3200);
+    const synths = pitches.map(() => audioCtx.createOscillator());
+    const gainControllers = pitches.map(() => audioCtx.createGain());
+    const masterGain = audioCtx.createGain();
+
+    return new AudioState(
+        audioCtx, gains, pitches, synths, gainControllers, masterGain
+    );
 }
 
 window.onload = () => {
@@ -37,28 +58,15 @@ window.onload = () => {
     const image = document.getElementById("source");
     ctx.drawImage(image, 0, 0);
     
-    const audioCtx = new AudioContext();
-    const gains = getGains(canvas);
-    const pitches = getPitches(canvas, 100, 3200);
-    const synths = pitches.map(() => audioCtx.createOscillator());
-    const gainControllers = pitches.map(() => audioCtx.createGain());
-    const masterGain = audioCtx.createGain();
-
-    const audio = new AudioState(
-        audioCtx, gains, pitches, synths, gainControllers, masterGain
-    );
+    const audio = createAudioFromCanvas(canvas);
 
     audio.initialize();
 
     const playButton = document.getElementById("play-button");
-    playButton.addEventListener("click", () => {
-        masterGain.connect(audioCtx.destination);
-    })
+    playButton.addEventListener("click", () => audio.play());
 
     const stopButton = document.getElementById("stop-button");
-    stopButton.addEventListener("click", () => {
-        masterGain.disconnect(audioCtx.destination);
-    })
+    stopButton.addEventListener("click", () => audio.stop());
 
 }
 
