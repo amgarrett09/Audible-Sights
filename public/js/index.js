@@ -26,17 +26,19 @@ window.onload = () => {
         const bufferBoundary = Math.floor(width*1.2)
         
         timeout = setInterval(() => {
-            if (col >= width && col < bufferBoundary) {
+            if (col === width) {
                 audio.setGainsToZero();
-                col++;
+                col ++;
             } else if (col === bufferBoundary) {
                 col = 0;
                 pan = -1;
-            } else {
+            } else if (col < width) {
                 audio.setPanValue(pan);
                 audio.setGainsFromColumn(col);
-                col++;
+                col ++
                 pan += 2 / width;
+            } else {
+                col++
             }
         }, interval);
     });
