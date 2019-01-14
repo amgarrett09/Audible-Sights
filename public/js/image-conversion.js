@@ -1,11 +1,13 @@
 class AudioState {
-    constructor(audioCtx, gains, pitches, synths, gainControllers, masterGain) {
+    constructor(audioCtx, gains, pitches, synths, 
+                gainControllers, masterGain, panNode) {
         this.audioCtx = audioCtx;
         this.gains = gains;
         this.pitches = pitches;
         this.synths = synths;
         this.gainControllers = gainControllers;
         this.masterGain = masterGain;
+        this.panNode = panNode
     }
 
     initialize() {
@@ -24,16 +26,18 @@ class AudioState {
         });
 
         this.masterGain.gain.value = 0.5;
+        
+        this.masterGain.connect(this.panNode);
 
         this.synths.forEach(synth => synth.start(0));
     }
 
     play() {
-        this.masterGain.connect(this.audioCtx.destination);
+        this.panNode.connect(this.audioCtx.destination);
     }
 
     stop() {
-        this.masterGain.disconnect(this.audioCtx.destination);
+        this.panNode.disconnect(this.audioCtx.destination);
     }
 
     setGainsFromColumn(col) {
@@ -42,10 +46,21 @@ class AudioState {
                 this.gains[col][i] / this.gainControllers.length;
         }
     }
+
+    setGainsToZero() {
+        for (let i = 0; i < this.gainControllers.length; i++) {
+            this.gainControllers[i].gain.value = 0;
+        }
+    }
+
+    setPanValue(num) {
+        this.panNode.pan.value = num;
+    }
 }
 
 export function createAudioFromCanvas(canvas) {
     const audioCtx = new AudioContext();
+    const panNode = audioCtx.createStereoPanner();
     const gains = getGains(canvas);
     const pitches = getPitches(canvas, 100, 3200);
     const synths = pitches.map(() => audioCtx.createOscillator());
@@ -53,7 +68,7 @@ export function createAudioFromCanvas(canvas) {
     const masterGain = audioCtx.createGain();
 
     return new AudioState(
-        audioCtx, gains, pitches, synths, gainControllers, masterGain
+        audioCtx, gains, pitches, synths, gainControllers, masterGain, panNode
     );
 }
 
