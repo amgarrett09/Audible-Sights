@@ -22,10 +22,10 @@ window.onload = () => {
         let col = 0;
         let pan = -1;
         const width = canvas.width;
+        // Used to generate a small period of silence in between loops
+        const bufferBoundary = Math.floor(width*1.2)
+        
         timeout = setInterval(() => {
-            // Used to generate a small period of silence in between loops
-            const bufferBoundary = Math.floor(width*1.2)
-            
             if (col >= width && col < bufferBoundary) {
                 audio.setGainsToZero();
                 col++;
