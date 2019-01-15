@@ -58,11 +58,12 @@ class AudioState {
     }
 }
 
-export function createAudioFromCanvas(canvas) {
+export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
+    const height = canvas.height;
     const audioCtx = new AudioContext();
     const panNode = audioCtx.createStereoPanner();
     const gains = getGains(canvas);
-    const pitches = getPitches(canvas, 100, 3200);
+    const pitches = getPitches(height, minPitch, maxPitch);
     const synths = pitches.map(() => audioCtx.createOscillator());
     const gainControllers = pitches.map(() => audioCtx.createGain());
     const masterGain = audioCtx.createGain();
@@ -88,15 +89,15 @@ function getGains(canvas) {
 
 /* Returns a list of pitches in descending order from maxPitch to minPitch.
 The number of pitches is based on the height the image. */
-function getPitches(canvas, minPitch, maxPitch) {
+function getPitches(height, minPitch, maxPitch) {
     if (minPitch == 0 || maxPitch == 0) {
         throw new Error("minPitch and maxPitch must not be zero");
     } else if (minPitch >= maxPitch) {
         throw new Error("minPitch must be less than maxPitch");
     }
 
-    const output = Array(canvas.height);
-    const baseInterval = getBaseInterval(canvas.height, minPitch, maxPitch);
+    const output = Array(height);
+    const baseInterval = getBaseInterval(height, minPitch, maxPitch);
     let freq = maxPitch;
     output[0] = freq;
 
