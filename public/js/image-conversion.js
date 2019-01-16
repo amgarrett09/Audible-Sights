@@ -25,10 +25,10 @@ class AudioState {
             this.synths[i].connect(this.gainControllers[i]);
         }
 
-        /* Initialize gain to max and connect all gain controllers to the 
+        /* Initialize gain to zero and connect all gain controllers to the 
         master gain */
         this.gainControllers.forEach(ctrl => {
-            ctrl.gain.value = 1 / this.gainControllers.length;
+            ctrl.gain.value = 0;
             ctrl.connect(this.masterGain);
         });
 
