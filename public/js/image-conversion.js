@@ -1,13 +1,20 @@
 class AudioState {
-    constructor(audioCtx, gains, pitches, synths, 
-                gainControllers, masterGain, panNode) {
+    constructor(
+        audioCtx,
+        gains,
+        pitches,
+        synths,
+        gainControllers,
+        masterGain,
+        panNode
+    ) {
         this.audioCtx = audioCtx;
         this.gains = gains;
         this.pitches = pitches;
         this.synths = synths;
         this.gainControllers = gainControllers;
         this.masterGain = masterGain;
-        this.panNode = panNode
+        this.panNode = panNode;
     }
 
     initialize() {
@@ -17,16 +24,16 @@ class AudioState {
             this.synths[i].frequency.value = this.pitches[i];
             this.synths[i].connect(this.gainControllers[i]);
         }
-        
+
         /* Initialize gain to max and connect all gain controllers to the 
         master gain */
         this.gainControllers.forEach(ctrl => {
             ctrl.gain.value = 1 / this.gainControllers.length;
-            ctrl.connect(this.masterGain)
+            ctrl.connect(this.masterGain);
         });
 
         this.masterGain.gain.value = 0.5;
-        
+
         this.masterGain.connect(this.panNode);
 
         this.synths.forEach(synth => synth.start(0));
@@ -42,7 +49,7 @@ class AudioState {
 
     setGainsFromColumn(col) {
         for (let i = 0; i < this.gainControllers.length; i++) {
-            this.gainControllers[i].gain.value = 
+            this.gainControllers[i].gain.value =
                 this.gains[col][i] / this.gainControllers.length;
         }
     }
@@ -69,7 +76,13 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     const masterGain = audioCtx.createGain();
 
     return new AudioState(
-        audioCtx, gains, pitches, synths, gainControllers, masterGain, panNode
+        audioCtx,
+        gains,
+        pitches,
+        synths,
+        gainControllers,
+        masterGain,
+        panNode
     );
 }
 
@@ -81,7 +94,7 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
 function getGains(canvas) {
     const imgData = make2dArray(canvas);
     const gains = imgData.map(arr => {
-        return arr.map(e => e/255);
+        return arr.map(e => e / 255);
     });
 
     return gains;
@@ -114,19 +127,21 @@ function make2dArray(canvas) {
     const height = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    if (width*height === 1) {
+    if (width * height === 1) {
         const pixel = ctx.getImageData(0, 0, 1, 1).data;
-        return [[0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2]]];
-    } else if (width*height === 0) {
+        return [[0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]]];
+    } else if (width * height === 0) {
         return [[]];
     }
-    
-    let output = Array(width).fill().map(() => Array(height));
-    for (let i=0; i < width; i++) {
-        for (let j=0; j < height; j++) {
+
+    let output = Array(width)
+        .fill()
+        .map(() => Array(height));
+    for (let i = 0; i < width; i++) {
+        for (let j = 0; j < height; j++) {
             const pixel = ctx.getImageData(i, j, 1, 1).data;
             // Conversion to greyscale using CCIR 601 method
-            const y = 0.299*pixel[0] + 0.587*pixel[1] + 0.114*pixel[2];
+            const y = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2];
             output[i][j] = y;
         }
     }
@@ -140,7 +155,7 @@ function getBaseInterval(height, minPitch, maxPitch) {
     if (height <= 1) {
         return 1;
     }
-    
+
     const exp = 1 / (height - 1);
     return Math.pow(range, exp);
 }

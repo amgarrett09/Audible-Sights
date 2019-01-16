@@ -18,5 +18,13 @@
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "path": "^0.12.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amgarrett09/image-to-sound.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amgarrett09/image-to-sound/issues"
+  },
+  "homepage": "https://github.com/amgarrett09/image-to-sound#readme"
 }
