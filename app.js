@@ -8,13 +8,16 @@ const port = 3000;
 const multer = require("multer");
 const uploadDir = path.join(__dirname, "public/images");
 const fileFilter = (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpe?g|png|gif)$/)) {
-        return cb(new Error('Upload must be an image'), false);
+    if (
+        !file.originalname.match(/\.(jpe?g|png|gif)$/) ||
+        (file.originalname.match(/\./g) || []).length > 1 // if we find more than one '.'
+    ) {
+        return cb(new Error("Upload must be an image"), false);
     }
     cb(null, true);
-}
+};
 const upload = multer({ dest: uploadDir, fileFilter: fileFilter });
-
+const uploadSingleImage = upload.single("image");
 
 // express handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -31,14 +34,16 @@ app.get("/play-image", (req, res) => {
     res.render("play-image");
 });
 
-app.post("/play-image", upload.single('image'), (req, res) => {
-    try {
+app.post("/play-image", (req, res) => {
+    uploadSingleImage(req, res, err => {
+        if (err) {
+            res.sendStatus(400);
+            return;
+        }
+        
         const imgPath = `/static/images/${req.file.filename}`;
-        res.render("play-image", {imgPath: imgPath});
-    } catch(err) {
-        console.error(err);
-        res.sendStatus(400);
-    }
+        res.render("play-image", { imgPath: imgPath });
+    });
 });
 
 app.listen(port, () => {
