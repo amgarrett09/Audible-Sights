@@ -31,7 +31,7 @@ app.get("/play-image", (req, res) => {
     res.render("play-image");
 });
 
-app.post("/play-image", upload.single('image'), (req, res, next) => {
+app.post("/play-image", upload.single('image'), (req, res) => {
     try {
         const imgPath = `/static/images/${req.file.filename}`;
         res.render("play-image", {imgPath: imgPath});
