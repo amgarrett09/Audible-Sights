@@ -55,9 +55,7 @@ class AudioState {
     }
 
     setGainsToZero() {
-        for (let i = 0; i < this.gainControllers.length; i++) {
-            this.gainControllers[i].gain.value = 0;
-        }
+        this.gainControllers.forEach(ctrl => (ctrl.gain.value = 0));
     }
 
     setPanValue(num) {
