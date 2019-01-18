@@ -47,10 +47,12 @@ class AudioState {
         this.panNode.disconnect(this.audioCtx.destination);
     }
 
+    // loop through a column of the gain data and set the gain controllers accordingly
     setGainsFromColumn(col) {
-        for (let i = 0; i < this.gainControllers.length; i++) {
+        const rows = this.gainControllers.length;
+        for (let i = 0; i < rows; i++) {
             this.gainControllers[i].gain.value =
-                this.gains[col][i] / this.gainControllers.length;
+                this.gains[rows*col + i] / rows;
         }
     }
 
@@ -84,16 +86,11 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     );
 }
 
-/* Takes a canvas and returns a 2D array of gain values (generated from the luma
-    of each pixed of the canvas).
-
-    Each "row" in the 2D array actually corresponds to a column of the image,
-    making it easier to scan the image data in columns from left to right. */
+/* Takes a canvas and returns an array of gain values (generated from the luma
+    of each pixed of the canvas).*/
 function getGains(canvas) {
-    const imgData = make2dArray(canvas);
-    const gains = imgData.map(arr => {
-        return arr.map(e => e / 255);
-    });
+    const imgData = makeArrayFromImg(canvas);
+    const gains = imgData.map(e => e/255);
 
     return gains;
 }
@@ -120,27 +117,25 @@ function getPitches(height, minPitch, maxPitch) {
     return output;
 }
 
-function make2dArray(canvas) {
-    const width = canvas.width;
-    const height = canvas.height;
+function makeArrayFromImg(canvas) {
+    const cols = canvas.width;
+    const rows = canvas.height;
     const ctx = canvas.getContext("2d");
 
-    if (width * height === 1) {
+    if (cols * rows === 1) {
         const pixel = ctx.getImageData(0, 0, 1, 1).data;
-        return [[0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]]];
-    } else if (width * height === 0) {
-        return [[]];
+        return [0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]];
+    } else if (cols * rows === 0) {
+        return [];
     }
 
-    let output = Array(width)
-        .fill()
-        .map(() => Array(height));
-    for (let i = 0; i < width; i++) {
-        for (let j = 0; j < height; j++) {
+    let output = Array(cols*rows);
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
             const pixel = ctx.getImageData(i, j, 1, 1).data;
             // Conversion to greyscale using CCIR 601 method
             const y = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2];
-            output[i][j] = y;
+            output[rows*i + j] = y;
         }
     }
     return output;
