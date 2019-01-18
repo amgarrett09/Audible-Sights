@@ -90,10 +90,29 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     of each pixed of the canvas). Indexes can be generated from rows and columns
     with the formula: [ROWS * column + row]*/
 function getGains(canvas) {
-    const imgData = makeArrayFromImg(canvas);
-    const gains = imgData.map(e => e / 255);
+    const cols = canvas.width;
+    const rows = canvas.height;
+    const ctx = canvas.getContext("2d");
 
-    return gains;
+    if (cols * rows === 1) {
+        const pixel = ctx.getImageData(0, 0, 1, 1).data;
+        let output = [0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]];
+        return output.map(e => e / 255);
+    } else if (cols * rows === 0) {
+        return [];
+    }
+
+    let output = Array(cols * rows);
+    for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+            const pixel = ctx.getImageData(i, j, 1, 1).data;
+            // Conversion to greyscale using CCIR 601 method
+            const y = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2];
+            output[rows * i + j] = y;
+        }
+    }
+
+    return output.map(e => e / 255);
 }
 
 /* Returns a list of pitches in descending order from maxPitch to minPitch.
@@ -115,30 +134,6 @@ function getPitches(height, minPitch, maxPitch) {
         output[i] = freq;
     }
 
-    return output;
-}
-
-function makeArrayFromImg(canvas) {
-    const cols = canvas.width;
-    const rows = canvas.height;
-    const ctx = canvas.getContext("2d");
-
-    if (cols * rows === 1) {
-        const pixel = ctx.getImageData(0, 0, 1, 1).data;
-        return [0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]];
-    } else if (cols * rows === 0) {
-        return [];
-    }
-
-    let output = Array(cols * rows);
-    for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            const pixel = ctx.getImageData(i, j, 1, 1).data;
-            // Conversion to greyscale using CCIR 601 method
-            const y = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2];
-            output[rows * i + j] = y;
-        }
-    }
     return output;
 }
 
