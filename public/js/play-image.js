@@ -1,5 +1,7 @@
 import { createAudioFromCanvas } from "./image-conversion.js";
 
+let audioPlaying = false;
+
 window.onload = () => {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -15,6 +17,11 @@ window.onload = () => {
 
     const playButton = document.getElementById("play-button");
     playButton.addEventListener("click", () => {
+        if (audioPlaying === true) {
+            return;
+        }
+
+        audioPlaying = true;
         audio.play();
 
         /* loop through the columns of the canvas at a given interval and set 
@@ -28,23 +35,25 @@ window.onload = () => {
         timeout = setInterval(() => {
             if (col === width) {
                 audio.setGainsToZero();
-                col++;
             } else if (col === bufferBoundary) {
-                col = 0;
                 pan = -1;
             } else if (col < width) {
                 audio.setPanValue(pan);
                 audio.setGainsFromColumn(col);
-                col++;
                 pan += 2 / width;
-            } else {
-                col++;
             }
+
+            col = (col + 1) % (bufferBoundary + 1);
         }, interval);
     });
 
     const stopButton = document.getElementById("stop-button");
     stopButton.addEventListener("click", () => {
+        if (audioPlaying === false) {
+            return;
+        }
+
+        audioPlaying = false;
         audio.stop();
         clearTimeout(timeout);
     });
