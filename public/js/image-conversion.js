@@ -52,7 +52,7 @@ class AudioState {
         const rows = this.gainControllers.length;
         for (let i = 0; i < rows; i++) {
             this.gainControllers[i].gain.value =
-                this.gains[rows*col + i] / rows;
+                this.gains[rows * col + i] / rows;
         }
     }
 
@@ -90,7 +90,7 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     of each pixed of the canvas).*/
 function getGains(canvas) {
     const imgData = makeArrayFromImg(canvas);
-    const gains = imgData.map(e => e/255);
+    const gains = imgData.map(e => e / 255);
 
     return gains;
 }
@@ -129,13 +129,13 @@ function makeArrayFromImg(canvas) {
         return [];
     }
 
-    let output = Array(cols*rows);
+    let output = Array(cols * rows);
     for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
             const pixel = ctx.getImageData(i, j, 1, 1).data;
             // Conversion to greyscale using CCIR 601 method
             const y = 0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2];
-            output[rows*i + j] = y;
+            output[rows * i + j] = y;
         }
     }
     return output;
