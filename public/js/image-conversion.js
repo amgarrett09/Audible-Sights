@@ -87,7 +87,8 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
 }
 
 /* Takes a canvas and returns an array of gain values (generated from the luma
-    of each pixed of the canvas).*/
+    of each pixed of the canvas). Indexes can be generated from rows and columns
+    with the formula: [ROWS * column + row]*/
 function getGains(canvas) {
     const imgData = makeArrayFromImg(canvas);
     const gains = imgData.map(e => e / 255);
