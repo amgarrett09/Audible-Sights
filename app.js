@@ -1,6 +1,9 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
 const path = require("path");
+const csurf = require("csurf");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 
@@ -16,8 +19,19 @@ const fileFilter = (req, file, cb) => {
     }
     cb(null, true);
 };
-const upload = multer({ dest: uploadDir, fileFilter: fileFilter });
+const upload = multer({
+    dest: uploadDir,
+    limits: { fileSize: 2048 },
+    fileFilter: fileFilter
+});
 const uploadSingleImage = upload.single("image");
+
+// body parser
+const parseBody = bodyParser.urlencoded({ extended: false });
+
+// CSRF protection
+const csrfMiddleware = csurf({ cookie: true });
+app.use(cookieParser());
 
 // express handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -26,26 +40,39 @@ app.set("view engine", "handlebars");
 // setting up static files
 app.use("/static", express.static(path.join(__dirname, "public")));
 
-app.get("/upload", (req, res) => {
-    res.render("upload");
+
+// routes
+app.get("/upload", csrfMiddleware, (req, res) => {
+    const err = req.query.error;
+    res.render("upload", { csrfToken: req.csrfToken(), err: err });
 });
 
 app.get("/play-image", (req, res) => {
-    res.render("play-image");
+    const fileName = req.query.img
+    res.render("play-image", {fileName: fileName});
 });
 
-app.post("/play-image", (req, res) => {
+app.post("/play-image", parseBody, csrfMiddleware, (req, res) => {
     uploadSingleImage(req, res, err => {
-        if (err) {
-            res.sendStatus(400);
+        if (err || !req.file) {
+            res.redirect("/upload?error=true");
             return;
         }
-        
-        const imgPath = `/static/images/${req.file.filename}`;
-        res.render("play-image", { imgPath: imgPath });
+
+        const fileName = req.file.filename;
+        res.redirect(`/play-image?img=${fileName}`)
     });
 });
 
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
 });
+
+
+// error handler
+app.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+   
+    res.status(403)
+    res.send('403: Forbidden')
+})

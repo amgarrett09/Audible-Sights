@@ -1,4 +1,12 @@
-<form action="/play-image" method="POST" enctype="multipart/form-data">
-    <input type="file" name="image">
-    <button type="submit">Upload</button>
-</form>
+<h1>Choose an image to upload</h1>
+
+{{#if err}}
+<p>Please upload an image file (jpg, png, or gif) that's less than 2KB.</p>
+{{/if}}
+
+<fieldset>
+    <form action="/play-image?_csrf={{csrfToken}}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <button type="submit">Upload</button>
+    </form>
+</fieldset>
