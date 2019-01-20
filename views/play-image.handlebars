@@ -1,3 +1,4 @@
+{{#if fileName}}
 <img src="/static/images/{{fileName}}" alt="source image" style="display:none"
     id="source">
 <canvas width="128" height="64" id="canvas"></canvas>
@@ -6,3 +7,6 @@
 <button id="stop-button">Stop</button>
 
 <script type="module" src="/static/js/play-image.js"></script>
+{{else}}
+<h1>Something went wrong. <a href="/upload">Try uploading again.</a></h1>
+{{/if}}

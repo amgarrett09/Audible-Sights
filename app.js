@@ -40,27 +40,36 @@ app.set("view engine", "handlebars");
 // setting up static files
 app.use("/static", express.static(path.join(__dirname, "public")));
 
-
 // routes
 app.get("/upload", csrfMiddleware, (req, res) => {
-    const err = req.query.error;
+    let err;
+    switch (req.query.error) {
+        case "badimage":
+            err =
+                "Please upload an image file (jpg, png, or gif) that's less than 2KB.";
+            break;
+        default:
+            err = false;
+            break;
+    }
     res.render("upload", { csrfToken: req.csrfToken(), err: err });
 });
 
 app.get("/play-image", (req, res) => {
-    const fileName = req.query.img
-    res.render("play-image", {fileName: fileName});
+    const fileName = req.query.img;
+    const time = req.query.time;
+    res.render("play-image", { fileName: fileName });
 });
 
 app.post("/play-image", parseBody, csrfMiddleware, (req, res) => {
     uploadSingleImage(req, res, err => {
         if (err || !req.file) {
-            res.redirect("/upload?error=true");
+            res.redirect("/upload?error=badimage");
             return;
         }
 
         const fileName = req.file.filename;
-        res.redirect(`/play-image?img=${fileName}`)
+        res.redirect(`/play-image?img=${fileName}`);
     });
 });
 
@@ -68,11 +77,10 @@ app.listen(port, () => {
     console.log(`App running on port ${port}`);
 });
 
-
 // error handler
-app.use(function (err, req, res, next) {
-    if (err.code !== 'EBADCSRFTOKEN') return next(err)
-   
-    res.status(403)
-    res.send('403: Forbidden')
-})
+app.use(function(err, req, res, next) {
+    if (err.code !== "EBADCSRFTOKEN") return next(err);
+
+    res.status(403);
+    res.send("403: Forbidden");
+});

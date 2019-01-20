@@ -1,12 +1,16 @@
 <h1>Choose an image to upload</h1>
+<p>This app can process images up to 128 x 64 in resolution. For best results,
+    your image should fit within that size.
+</p>
 
 {{#if err}}
-<p>Please upload an image file (jpg, png, or gif) that's less than 2KB.</p>
+<p>{{err}}</p>
 {{/if}}
 
 <fieldset>
     <form action="/play-image?_csrf={{csrfToken}}" method="POST" enctype="multipart/form-data">
-        <input type="file" name="image">
+        <label for="image">Choose an image:</label>
+        <p><input type="file" name="image"></p>
         <button type="submit">Upload</button>
     </form>
 </fieldset>
