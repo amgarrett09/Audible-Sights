@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
 };
 const upload = multer({
     dest: uploadDir,
-    limits: { fileSize: 2048 },
+    limits: { fileSize: 15360 },
     fileFilter: fileFilter
 });
 const uploadSingleImage = upload.single("image");
@@ -41,12 +41,16 @@ app.set("view engine", "handlebars");
 app.use("/static", express.static(path.join(__dirname, "public")));
 
 // routes
+app.get("/", (req, res) => {
+    res.render("index");
+});
+
 app.get("/upload", csrfMiddleware, (req, res) => {
     let err;
     switch (req.query.error) {
         case "badimage":
             err =
-                "Please upload an image file (jpg, png, or gif) that's less than 2KB.";
+                "Please upload an image file (jpg, png, or gif) that's less than 15KB.";
             break;
         default:
             err = false;

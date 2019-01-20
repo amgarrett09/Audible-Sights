@@ -8,7 +8,7 @@ window.onload = () => {
     const image = document.getElementById("source");
     ctx.drawImage(image, 0, 0);
 
-    const audio = createAudioFromCanvas(canvas, 100, 3200);
+    const audio = createAudioFromCanvas(canvas, 100, 6400);
 
     audio.initialize();
 
