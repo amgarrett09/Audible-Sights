@@ -66,11 +66,17 @@ class AudioState {
 }
 
 export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
+    if (minPitch == 0 || maxPitch == 0) {
+        throw new Error("minPitch and maxPitch must not be zero");
+    } else if (minPitch >= maxPitch) {
+        throw new Error("minPitch must be less than maxPitch");
+    }
+
     const height = canvas.height;
     const audioCtx = new AudioContext();
     const panNode = audioCtx.createStereoPanner();
-    const gains = getGains(canvas);
-    const pitches = getPitches(height, minPitch, maxPitch);
+    const gains = createGains(canvas);
+    const pitches = createPitches(height, minPitch, maxPitch);
     const synths = pitches.map(() => audioCtx.createOscillator());
     const gainControllers = pitches.map(() => audioCtx.createGain());
     const masterGain = audioCtx.createGain();
@@ -89,7 +95,7 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
 /* Takes a canvas and returns an array of gain values (generated from the luma
     of each pixed of the canvas). Indexes can be generated from rows and columns
     with the formula: [ROWS * column + row]*/
-function getGains(canvas) {
+function createGains(canvas) {
     const cols = canvas.width;
     const rows = canvas.height;
     const ctx = canvas.getContext("2d");
@@ -117,15 +123,18 @@ function getGains(canvas) {
 
 /* Returns a list of pitches in descending order from maxPitch to minPitch.
 The number of pitches is based on the height the image. */
-function getPitches(height, minPitch, maxPitch) {
-    if (minPitch == 0 || maxPitch == 0) {
-        throw new Error("minPitch and maxPitch must not be zero");
-    } else if (minPitch >= maxPitch) {
-        throw new Error("minPitch must be less than maxPitch");
+function createPitches(height, minPitch, maxPitch) {
+    let baseInterval;
+    if (height <= 2) {
+        baseInterval = 1;
+    } else {
+        const range = maxPitch / minPitch;
+        const exp = 1 / (height - 1);
+        baseInterval = Math.pow(range, exp);
     }
 
     const output = Array(height);
-    const baseInterval = getBaseInterval(height, minPitch, maxPitch);
+    
     let freq = maxPitch;
     output[0] = freq;
 
@@ -135,16 +144,4 @@ function getPitches(height, minPitch, maxPitch) {
     }
 
     return output;
-}
-
-/* Calculates the interval between each pitch based on the height of the image,
-a minimum pitch, and a maximum pitch */
-function getBaseInterval(height, minPitch, maxPitch) {
-    const range = maxPitch / minPitch;
-    if (height <= 1) {
-        return 1;
-    }
-
-    const exp = 1 / (height - 1);
-    return Math.pow(range, exp);
 }
