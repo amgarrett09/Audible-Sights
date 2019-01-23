@@ -1,4 +1,12 @@
-import { createAudioFromCanvas } from "./image-conversion.js";
+import {
+    createAudioFromCanvas,
+    connectPanNodeToOutput,
+    setGainCtrlsToZero,
+    setPanValue,
+    disconnect,
+    setGainCtrlsFromColumn,
+    createGains
+} from "./image-conversion.js";
 
 let audioState;
 let audioPlaying = false;
@@ -7,7 +15,6 @@ let timeout;
 window.onload = () => {
     const canvas = document.querySelector("canvas");
     audioState = createAudioFromCanvas(canvas, 100, 6400);
-    audioState.initialize();
 
     const links = document.querySelectorAll(".img-link");
 
@@ -20,7 +27,7 @@ window.onload = () => {
             const ctx = canvas.getContext("2d");
             ctx.drawImage(image, 0, 0);
 
-            audioState.convertCanvasToGains(canvas);
+            audioState.gainValues = createGains(canvas);
 
             document.querySelector(".canvas-div").setAttribute("style", "");
             document.querySelector(".audio-controls").setAttribute("style", "");
@@ -37,10 +44,10 @@ window.onload = () => {
             }
 
             audioPlaying = true;
-            audioState.play();
+            connectPanNodeToOutput(audioState.panNode, audioState.audioCtx);
 
             /* loop through the columns of the canvas at a given interval and set 
-        gains based on pixel data */
+            gains based on pixel data */
             let col = 0;
             let pan = -1;
             const width = canvas.width;
@@ -49,12 +56,16 @@ window.onload = () => {
 
             timeout = setInterval(() => {
                 if (col === width) {
-                    audioState.setGainCtrlsToZero();
+                    setGainCtrlsToZero(audioState.gainControllers);
                 } else if (col === bufferBoundary) {
                     pan = -1;
                 } else if (col < width) {
-                    audioState.setPanValue(pan);
-                    audioState.setGainCtrlsFromColumn(col);
+                    setPanValue(audioState.panNode, pan);
+                    setGainCtrlsFromColumn(
+                        audioState.gainValues,
+                        audioState.gainControllers,
+                        col
+                    );
                     pan += 2 / width;
                 }
 
@@ -70,7 +81,7 @@ window.onload = () => {
             }
 
             audioPlaying = false;
-            audioState.stop();
+            disconnect(audioState.panNode, audioState.audioCtx);
             clearTimeout(timeout);
         });
 };

@@ -1,6 +1,14 @@
-import { createAudioFromCanvas } from "./image-conversion.js";
+import {
+    createAudioFromCanvas,
+    connectPanNodeToOutput,
+    setGainCtrlsToZero,
+    setPanValue,
+    disconnect,
+    setGainCtrlsFromColumn,
+} from "./image-conversion.js";
 
 let audioPlaying = false;
+let audioState;
 
 window.onload = () => {
     const canvas = document.getElementById("canvas");
@@ -8,9 +16,7 @@ window.onload = () => {
     const image = document.getElementById("source");
     ctx.drawImage(image, 0, 0);
 
-    const audio = createAudioFromCanvas(canvas, 100, 6400);
-
-    audio.initialize();
+    audioState = createAudioFromCanvas(canvas, 100, 6400);
 
     let timeout;
     const interval = 1000 / canvas.width; // time in ms for each column
@@ -22,7 +28,7 @@ window.onload = () => {
         }
 
         audioPlaying = true;
-        audio.play();
+        connectPanNodeToOutput(audioState.panNode, audioState.audioCtx);
 
         /* loop through the columns of the canvas at a given interval and set 
         gains based on pixel data */
@@ -34,12 +40,16 @@ window.onload = () => {
 
         timeout = setInterval(() => {
             if (col === width) {
-                audio.setGainCtrlsToZero();
+                setGainCtrlsToZero(audioState.gainControllers);
             } else if (col === bufferBoundary) {
                 pan = -1;
             } else if (col < width) {
-                audio.setPanValue(pan);
-                audio.setGainCtrlsFromColumn(col);
+                setPanValue(audioState.panNode, pan);
+                setGainCtrlsFromColumn(
+                    audioState.gainValues,
+                    audioState.gainControllers,
+                    col
+                );
                 pan += 2 / width;
             }
 
@@ -54,7 +64,7 @@ window.onload = () => {
         }
 
         audioPlaying = false;
-        audio.stop();
+        disconnect(audioState.panNode, audioState.audioCtx);
         clearTimeout(timeout);
     });
 };

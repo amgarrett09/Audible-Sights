@@ -1,74 +1,3 @@
-class AudioState {
-    constructor(
-        audioCtx,
-        gains,
-        pitches,
-        synths,
-        gainControllers,
-        masterGain,
-        panNode
-    ) {
-        this.audioCtx = audioCtx;
-        this.gains = gains;
-        this.pitches = pitches;
-        this.synths = synths;
-        this.gainControllers = gainControllers;
-        this.masterGain = masterGain;
-        this.panNode = panNode;
-    }
-
-    initialize() {
-        /* Set oscillators to correct frequencies and connect each one to a
-         gain controller. */
-        for (let i = 0; i < this.synths.length; i++) {
-            this.synths[i].frequency.value = this.pitches[i];
-            this.synths[i].connect(this.gainControllers[i]);
-        }
-
-        /* Initialize gain to zero and connect all gain controllers to the 
-        master gain */
-        this.gainControllers.forEach(ctrl => {
-            ctrl.gain.value = 0;
-            ctrl.connect(this.masterGain);
-        });
-
-        this.masterGain.gain.value = 1;
-
-        this.masterGain.connect(this.panNode);
-
-        this.synths.forEach(synth => synth.start(0));
-    }
-
-    play() {
-        this.panNode.connect(this.audioCtx.destination);
-    }
-
-    stop() {
-        this.panNode.disconnect(this.audioCtx.destination);
-    }
-
-    // loop through a column of the gain data and set the gain controllers accordingly
-    setGainCtrlsFromColumn(col) {
-        const rows = this.gainControllers.length;
-        for (let i = 0; i < rows; i++) {
-            this.gainControllers[i].gain.value =
-                this.gains[rows * col + i] / rows;
-        }
-    }
-
-    setGainCtrlsToZero() {
-        this.gainControllers.forEach(ctrl => (ctrl.gain.value = 0));
-    }
-
-    convertCanvasToGains(canvas) {
-        this.gains = createGains(canvas);
-    }
-
-    setPanValue(num) {
-        this.panNode.pan.value = num;
-    }
-}
-
 export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     if (minPitch == 0 || maxPitch == 0) {
         throw new Error("minPitch and maxPitch must not be zero");
@@ -79,27 +8,72 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     const height = canvas.height;
     const audioCtx = new AudioContext();
     const panNode = audioCtx.createStereoPanner();
-    const gains = createGains(canvas);
+    const gainValues = createGains(canvas);
     const pitches = createPitches(height, minPitch, maxPitch);
     const synths = pitches.map(() => audioCtx.createOscillator());
     const gainControllers = pitches.map(() => audioCtx.createGain());
     const masterGain = audioCtx.createGain();
 
-    return new AudioState(
-        audioCtx,
-        gains,
-        pitches,
-        synths,
-        gainControllers,
-        masterGain,
-        panNode
-    );
+    let audioState = {
+        audioCtx: audioCtx,
+        panNode: panNode,
+        gainValues: gainValues,
+        pitches: pitches,
+        synths: synths,
+        gainControllers: gainControllers,
+        masterGain: masterGain
+    };
+
+    /* Set oscillators to correct frequencies and connect each one to a
+    gain controller. */
+    for (let i = 0; i < audioState.synths.length; i++) {
+        audioState.synths[i].frequency.value = audioState.pitches[i];
+        audioState.synths[i].connect(audioState.gainControllers[i]);
+    }
+
+    /* Initialize gain to zero and connect all gain controllers to the 
+    master gain */
+    audioState.gainControllers.forEach(ctrl => {
+        ctrl.gain.value = 0;
+        ctrl.connect(audioState.masterGain);
+    });
+
+    audioState.masterGain.gain.value = 1;
+
+    audioState.masterGain.connect(audioState.panNode);
+
+    audioState.synths.forEach(synth => synth.start(0));
+
+    return audioState;
+}
+
+export function connectPanNodeToOutput(panNode, audioCtx) {
+    panNode.connect(audioCtx.destination);
+}
+
+export function disconnect(panNode, audioCtx) {
+    panNode.disconnect(audioCtx.destination);
+}
+
+export function setGainCtrlsFromColumn(gainValues, gainControllers, col) {
+    const rows = gainControllers.length;
+    for (let i = 0; i < rows; i++) {
+        gainControllers[i].gain.value = gainValues[rows * col + i] / rows;
+    }
+}
+
+export function setPanValue(panNode, num) {
+    panNode.pan.value = num;
+}
+
+export function setGainCtrlsToZero(gainControllers) {
+    gainControllers.forEach(ctrl => (ctrl.gain.value = 0));
 }
 
 /* Takes a canvas and returns an array of gain values (generated from the luma
     of each pixed of the canvas). Indexes can be generated from rows and columns
     with the formula: [ROWS * column + row]*/
-function createGains(canvas) {
+export function createGains(canvas) {
     const cols = canvas.width;
     const rows = canvas.height;
     const ctx = canvas.getContext("2d");
