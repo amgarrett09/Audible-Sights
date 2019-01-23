@@ -32,7 +32,7 @@ class AudioState {
             ctrl.connect(this.masterGain);
         });
 
-        this.masterGain.gain.value = 0.5;
+        this.masterGain.gain.value = 1;
 
         this.masterGain.connect(this.panNode);
 
@@ -48,7 +48,7 @@ class AudioState {
     }
 
     // loop through a column of the gain data and set the gain controllers accordingly
-    setGainsFromColumn(col) {
+    setGainCtrlsFromColumn(col) {
         const rows = this.gainControllers.length;
         for (let i = 0; i < rows; i++) {
             this.gainControllers[i].gain.value =
@@ -56,8 +56,12 @@ class AudioState {
         }
     }
 
-    setGainsToZero() {
+    setGainCtrlsToZero() {
         this.gainControllers.forEach(ctrl => (ctrl.gain.value = 0));
+    }
+
+    convertCanvasToGains(canvas) {
+        this.gains = createGains(canvas);
     }
 
     setPanValue(num) {
@@ -134,7 +138,7 @@ function createPitches(height, minPitch, maxPitch) {
     }
 
     const output = Array(height);
-    
+
     let freq = maxPitch;
     output[0] = freq;
 

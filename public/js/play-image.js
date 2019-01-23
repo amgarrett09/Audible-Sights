@@ -34,12 +34,12 @@ window.onload = () => {
 
         timeout = setInterval(() => {
             if (col === width) {
-                audio.setGainsToZero();
+                audio.setGainCtrlsToZero();
             } else if (col === bufferBoundary) {
                 pan = -1;
             } else if (col < width) {
                 audio.setPanValue(pan);
-                audio.setGainsFromColumn(col);
+                audio.setGainCtrlsFromColumn(col);
                 pan += 2 / width;
             }
 

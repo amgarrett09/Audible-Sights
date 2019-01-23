@@ -45,6 +45,10 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
+app.get("/demo", (req, res) => {
+    res.render("demo");
+});
+
 app.get("/upload", csrfMiddleware, (req, res) => {
     let err;
     switch (req.query.error) {
