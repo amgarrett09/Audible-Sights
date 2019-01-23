@@ -47,14 +47,6 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     return audioState;
 }
 
-export function connectPanNodeToOutput(panNode, audioCtx) {
-    panNode.connect(audioCtx.destination);
-}
-
-export function disconnect(panNode, audioCtx) {
-    panNode.disconnect(audioCtx.destination);
-}
-
 export function setGainCtrlsFromColumn(gainValues, gainControllers, col) {
     const rows = gainControllers.length;
     for (let i = 0; i < rows; i++) {

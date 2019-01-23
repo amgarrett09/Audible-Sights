@@ -1,9 +1,7 @@
 import {
     createAudioFromCanvas,
-    connectPanNodeToOutput,
     setGainCtrlsToZero,
     setPanValue,
-    disconnect,
     setGainCtrlsFromColumn,
     createGains
 } from "./image-conversion.js";
@@ -19,7 +17,7 @@ window.onload = () => {
     const links = document.querySelectorAll(".img-link");
 
     links.forEach(link => {
-        link.addEventListener("click", function(event) {
+        link.addEventListener("click", function() {
             event.preventDefault();
 
             const image = this.firstElementChild;
@@ -43,7 +41,7 @@ window.onload = () => {
         }
 
         audioPlaying = true;
-        connectPanNodeToOutput(audioState.panNode, audioState.audioCtx);
+        audioState.panNode.connect(audioState.audioCtx.destination);
 
         /* loop through the columns of the canvas at a given interval and set 
             gains based on pixel data */
@@ -78,7 +76,7 @@ window.onload = () => {
         }
 
         audioPlaying = false;
-        disconnect(audioState.panNode, audioState.audioCtx);
+        audioState.panNode.disconnect(audioState.audioCtx.destination);
         clearTimeout(timeout);
     });
 };
