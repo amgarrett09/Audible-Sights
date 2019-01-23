@@ -4,11 +4,12 @@ import {
     setGainCtrlsToZero,
     setPanValue,
     disconnect,
-    setGainCtrlsFromColumn,
+    setGainCtrlsFromColumn
 } from "./image-conversion.js";
 
 let audioPlaying = false;
 let audioState;
+let timeout;
 
 window.onload = () => {
     const canvas = document.getElementById("canvas");
@@ -18,11 +19,10 @@ window.onload = () => {
 
     audioState = createAudioFromCanvas(canvas, 100, 6400);
 
-    let timeout;
+    // set up play and stop buttons
     const interval = 1000 / canvas.width; // time in ms for each column
 
-    const playButton = document.getElementById("play-button");
-    playButton.addEventListener("click", () => {
+    document.getElementById("play-button").addEventListener("click", () => {
         if (audioPlaying === true) {
             return;
         }
@@ -57,8 +57,7 @@ window.onload = () => {
         }, interval);
     });
 
-    const stopButton = document.getElementById("stop-button");
-    stopButton.addEventListener("click", () => {
+    document.getElementById("stop-button").addEventListener("click", () => {
         if (audioPlaying === false) {
             return;
         }
