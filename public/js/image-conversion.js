@@ -47,21 +47,6 @@ export function createAudioFromCanvas(canvas, minPitch, maxPitch) {
     return audioState;
 }
 
-export function setGainCtrlsFromColumn(gainValues, gainControllers, col) {
-    const rows = gainControllers.length;
-    for (let i = 0; i < rows; i++) {
-        gainControllers[i].gain.value = gainValues[rows * col + i] / rows;
-    }
-}
-
-export function setPanValue(panNode, num) {
-    panNode.pan.value = num;
-}
-
-export function setGainCtrlsToZero(gainControllers) {
-    gainControllers.forEach(ctrl => (ctrl.gain.value = 0));
-}
-
 /* Takes a canvas and returns an array of gain values (generated from the luma
     of each pixed of the canvas). Indexes can be generated from rows and columns
     with the formula: [ROWS * column + row]*/

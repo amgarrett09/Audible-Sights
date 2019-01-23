@@ -1,9 +1,4 @@
-import {
-    createAudioFromCanvas,
-    setGainCtrlsToZero,
-    setPanValue,
-    setGainCtrlsFromColumn
-} from "./image-conversion.js";
+import { createAudioFromCanvas } from "./image-conversion.js";
 
 let audioPlaying = false;
 let audioState;
@@ -17,7 +12,7 @@ window.onload = () => {
 
     audioState = createAudioFromCanvas(canvas, 100, 6400);
 
-    // set up play and stop buttons
+    // setup play and stop buttons
     const interval = 1000 / canvas.width; // time in ms for each column
 
     document.getElementById("play-button").addEventListener("click", () => {
@@ -26,28 +21,34 @@ window.onload = () => {
         }
 
         audioPlaying = true;
+
+        // start playing audio
         audioState.panNode.connect(audioState.audioCtx.destination);
 
-        /* loop through the columns of the canvas at a given interval and set 
-        gains based on pixel data */
+        /* loop through each column of the gainValue data at a given interval
+        and set gainControllers accordingly */
         let col = 0;
         let pan = -1;
         const width = canvas.width;
-        // Used to generate a small period of silence in between loops
         const bufferBoundary = Math.floor(width * 1.2);
 
         timeout = setInterval(() => {
             if (col === width) {
-                setGainCtrlsToZero(audioState.gainControllers);
+                audioState.gainControllers.forEach(
+                    ctrl => (ctrl.gain.value = 0)
+                );
             } else if (col === bufferBoundary) {
                 pan = -1;
             } else if (col < width) {
-                setPanValue(audioState.panNode, pan);
-                setGainCtrlsFromColumn(
-                    audioState.gainValues,
-                    audioState.gainControllers,
-                    col
-                );
+                audioState.panNode.pan.value = pan;
+
+                // set gain controllers based on current column
+                const rows = audioState.gainControllers.length;
+                for (let i = 0; i < rows; i++) {
+                    audioState.gainControllers[i].gain.value =
+                        audioState.gainValues[rows * col + i] / rows;
+                }
+
                 pan += 2 / width;
             }
 
