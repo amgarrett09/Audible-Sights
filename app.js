@@ -9,11 +9,11 @@ const port = 3000;
 
 // file uploading with multer
 const multer = require("multer");
-const uploadDir = path.join(__dirname, "public/images");
+const uploadDir = path.join(__dirname, "public/images/upload");
 const fileFilter = (req, file, cb) => {
     if (
         !file.originalname.match(/\.(jpe?g|png|gif)$/) ||
-        (file.originalname.match(/\./g) || []).length > 1 // if we find more than one '.'
+        (file.originalname.match(/\./g) || []).length !== 1 // file must have exactly 1 '.'
     ) {
         return cb(new Error("Upload must be an image"), false);
     }
