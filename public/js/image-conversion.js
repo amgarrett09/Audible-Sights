@@ -16,6 +16,7 @@ export class AudioState {
         this.gainControllers = this.pitches.map(() => this.audioCtx.createGain());
         this.masterGain = this.audioCtx.createGain();
         this.interval = 1000 / this.width;
+        this.audioPlaying = false;
 
         /* Set oscillators to correct frequencies and connect each one to a
         gain controller. */
