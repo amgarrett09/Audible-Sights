@@ -32,7 +32,7 @@ export class AudioState {
             ctrl.connect(this.masterGain);
         });
 
-        this.masterGain.gain.value = 1;
+        this.masterGain.gain.value = 0.8;
 
         this.masterGain.connect(this.panNode);
 

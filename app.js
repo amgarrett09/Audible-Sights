@@ -87,8 +87,11 @@ app.listen(port, () => {
 
 // error handler
 app.use(function(err, req, res, next) {
-    if (err.code !== "EBADCSRFTOKEN") return next(err);
+    if (err.code === "EBADCSRFTOKEN") {
+        res.status(403);
+        res.send("403: Forbidden");
+        return;
+    }
 
-    res.status(403);
-    res.send("403: Forbidden");
+    return next(err);
 });
