@@ -51,4 +51,20 @@ body {
     background-color: $warning-color;
     padding: 2px 15px 2px 15px;
     border-radius: 10px;
+    color: $bgcolor-primary;
+}
+
+.audio-controls {
+    button {
+        background-color: $bgcolor-secondary;
+        color: $bgcolor-primary;
+        border-radius: 5px;
+        border: 2px solid $bgcolor-secondary;
+        font-size: 1.6rem;
+        width: 100px;
+    }
+    button:hover {
+        background-color: lighten($bgcolor-secondary, 7%);
+        border-color: lighten($bgcolor-secondary, 7%);
+    }
 }

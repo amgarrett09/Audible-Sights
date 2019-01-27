@@ -55,5 +55,20 @@ body {
   background-color: #f48942;
   padding: 2px 15px 2px 15px;
   border-radius: 10px;
+  color: #fafafa;
+}
+
+.audio-controls button {
+  background-color: #4286f4;
+  color: #fafafa;
+  border-radius: 5px;
+  border: 2px solid #4286f4;
+  font-size: 1.6rem;
+  width: 100px;
+}
+
+.audio-controls button:hover {
+  background-color: #649cf6;
+  border-color: #649cf6;
 }
 /*# sourceMappingURL=master.css.map */

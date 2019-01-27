@@ -1,16 +1,21 @@
-<h1>Choose an image to upload</h1>
-<p>This app can process images up to 128 x 64 in resolution. For best results,
-    your image should fit within that size.
-</p>
+<div class="container">
+    <h1>Choose an image to upload</h1>
+    <p>This app can process images up to 128 x 64 in resolution. For best results,
+        your image should fit within that size.
+    </p>
 
-{{#if err}}
-<p>{{err}}</p>
-{{/if}}
+    {{#if err}}
+    <div class="warning">
+        <p><strong>{{err}}</strong></p>
+    </div>
+    <br>
+    {{/if}}
 
-<fieldset>
-    <form action="/play-image?_csrf={{csrfToken}}" method="POST" enctype="multipart/form-data">
-        <label for="image">Choose an image:</label>
-        <p><input type="file" name="image"></p>
-        <button type="submit">Upload</button>
-    </form>
-</fieldset>
+    <fieldset>
+        <form action="/play-image?_csrf={{csrfToken}}" method="POST" enctype="multipart/form-data">
+            <label for="image">Choose an image:</label>
+            <p><input type="file" name="image"></p>
+            <button type="submit">Upload</button>
+        </form>
+    </fieldset>
+</div>
