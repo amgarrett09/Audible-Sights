@@ -1,0 +1,54 @@
+$bgcolor-primary: hsl(0, 0%, 98%);
+$bgcolor-secondary: #4286f4;
+$font-primary: 'Open Sans', sans-serif;
+
+$warning-color: #f48942;
+$button-hover: #bed4f8;
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    background-color: $bgcolor-primary;
+    font-family: $font-primary;
+    font-size: 1.6rem;
+    margin: 0;
+}
+
+.container {
+    margin: 0 15vw 0 15vw;
+    padding: 10px 0 10px 0;
+}
+
+#how-it-works {
+    background-color: $bgcolor-secondary;
+    color: $bgcolor-primary;
+
+    button {
+        background-color: $bgcolor-primary;
+        border-radius: 5px;
+        border: solid $bgcolor-primary 2px;
+        font-size: 1.8rem;
+        padding: 5px 10px 5px 10px;
+        position: relative;
+        left: 10%;
+        width: 250px;
+    }
+    button:hover {
+        animation: hover-anim 0.1s linear;
+        animation-fill-mode: forwards;
+    }
+    @keyframes hover-anim {
+        100% {
+            background-color: $button-hover;
+            border-color: $button-hover;
+        }
+    }
+}
+
+.warning {
+    background-color: $warning-color;
+    padding: 2px 15px 2px 15px;
+    border-radius: 10px;
+}
