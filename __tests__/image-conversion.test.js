@@ -1,4 +1,4 @@
-import { createGains } from "../public/js/image-conversion.js";
+import { createGains, createPitches } from "../public/js/image-conversion.js";
 const { createCanvas, loadImage } = require("canvas");
 
 test("test createGains function", async () => {
@@ -72,5 +72,14 @@ test("test createGains function", async () => {
         0.976470588235294,
         0.976470588235294,
         0.976470588235294
+    ]);
+});
+
+test("test createPitches function", () => {
+    expect(createPitches(4, 100, 6400)).toEqual([
+        6400,
+        1600.0000000000002,
+        400.0000000000001,
+        100.00000000000004
     ]);
 });

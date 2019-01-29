@@ -119,7 +119,7 @@ export function createGains(canvas) {
 
 /* Returns a list of pitches in descending order from maxPitch to minPitch.
 The number of pitches is based on the height the image. */
-function createPitches(height, minPitch, maxPitch) {
+export function createPitches(height, minPitch, maxPitch) {
     let baseInterval;
     if (height <= 2) {
         baseInterval = 1;
