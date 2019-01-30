@@ -1,12 +1,17 @@
-{{#if fileName}}
-<img src="/static/images/upload/{{fileName}}" alt="source image" style="display:none"
-    id="source">
-<canvas width="128" height="64" id="canvas"></canvas>
+<section id="active-image" style="text-align: center">
+    <div class="container">
+        {{#if fileName}}
+        <img src="/static/images/upload/{{fileName}}" alt="source image" style="display:none" id="source">
+        <canvas width="128" height="64" id="canvas"></canvas>
 
-<button id="play-button">Play</button>
-<button id="stop-button">Stop</button>
+        <div class="audio-controls">
+            <button id="play-button">Play</button>
+            <button id="stop-button">Stop</button>
+        </div>
 
-<script type="module" src="/static/js/play-image.js"></script>
-{{else}}
-<h1>Something went wrong. <a href="/upload">Try uploading again.</a></h1>
-{{/if}}
+        <script type="module" src="/static/js/play-image.js"></script>
+        {{else}}
+        <h1>Something went wrong. <a href="/upload">Try uploading again.</a></h1>
+        {{/if}}
+    </div>
+</section>

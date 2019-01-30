@@ -1,12 +1,15 @@
 $bgcolor-primary: hsl(0, 0%, 98%);
 $bgcolor-secondary: #4286f4;
-$font-primary: 'Open Sans', sans-serif;
+$font-primary: "Open Sans", sans-serif;
 
 $warning-color: #f48942;
 $button-hover: #bed4f8;
 
+$footer-color: hsl(0, 0%, 20%);
+
 html {
     font-size: 62.5%;
+    background-color: $footer-color;
 }
 
 body {
@@ -14,6 +17,52 @@ body {
     font-family: $font-primary;
     font-size: 1.6rem;
     margin: 0;
+}
+
+#header {
+    background-color: $bgcolor-primary;
+}
+
+nav {
+    background-color: $bgcolor-secondary;
+    color: $bgcolor-primary;
+    height: 100px;
+    margin-bottom: 50px;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "logo links";
+
+    .logo {
+        font-weight: bold;
+        font-size: 3rem;
+        grid-area: "logo";
+        align-self: center;
+        padding-left: 10px;
+
+        a {
+            text-decoration: none;
+            color: $bgcolor-primary;
+        }
+    }
+
+    .links {
+        grid-area: "links";
+        align-self: center;
+        justify-self: end;
+        padding-right: 10px;
+
+        a {
+            text-decoration: none;
+            color: $bgcolor-primary;
+            margin: 0 5px 0 5px;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    }
 }
 
 .container {
@@ -54,6 +103,10 @@ body {
     color: $bgcolor-primary;
 }
 
+#image-selector, #active-image {
+    min-height: 400px;
+}
+
 .audio-controls {
     button {
         background-color: $bgcolor-secondary;
@@ -67,4 +120,13 @@ body {
         background-color: lighten($bgcolor-secondary, 7%);
         border-color: lighten($bgcolor-secondary, 7%);
     }
+}
+
+footer {
+    background-color: $footer-color;
+    text-align: center;
+    color: $bgcolor-primary;
+     p {
+         margin: 0;
+     }
 }

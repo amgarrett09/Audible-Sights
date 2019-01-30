@@ -1,5 +1,6 @@
 html {
   font-size: 62.5%;
+  background-color: #333333;
 }
 
 body {
@@ -7,6 +8,48 @@ body {
   font-family: "Open Sans", sans-serif;
   font-size: 1.6rem;
   margin: 0;
+}
+
+#header {
+  background-color: #fafafa;
+}
+
+nav {
+  background-color: #4286f4;
+  color: #fafafa;
+  height: 100px;
+  margin-bottom: 50px;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "logo links";
+}
+nav .logo {
+  font-weight: bold;
+  font-size: 3rem;
+  grid-area: "logo";
+  align-self: center;
+  padding-left: 10px;
+}
+nav .logo a {
+  text-decoration: none;
+  color: #fafafa;
+}
+nav .links {
+  grid-area: "links";
+  align-self: center;
+  justify-self: end;
+  padding-right: 10px;
+}
+nav .links a {
+  text-decoration: none;
+  color: #fafafa;
+  margin: 0 5px 0 5px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+nav .links a:hover {
+  text-decoration: underline;
 }
 
 .container {
@@ -18,7 +61,6 @@ body {
   background-color: #4286f4;
   color: #fafafa;
 }
-
 #how-it-works button {
   background-color: #fafafa;
   border-radius: 5px;
@@ -29,21 +71,10 @@ body {
   left: 10%;
   width: 250px;
 }
-
 #how-it-works button:hover {
-  -webkit-animation: hover-anim 0.1s linear;
-          animation: hover-anim 0.1s linear;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
+  animation: hover-anim 0.1s linear;
+  animation-fill-mode: forwards;
 }
-
-@-webkit-keyframes hover-anim {
-  100% {
-    background-color: #bed4f8;
-    border-color: #bed4f8;
-  }
-}
-
 @keyframes hover-anim {
   100% {
     background-color: #bed4f8;
@@ -58,6 +89,10 @@ body {
   color: #fafafa;
 }
 
+#image-selector, #active-image {
+  min-height: 400px;
+}
+
 .audio-controls button {
   background-color: #4286f4;
   color: #fafafa;
@@ -66,9 +101,18 @@ body {
   font-size: 1.6rem;
   width: 100px;
 }
-
 .audio-controls button:hover {
   background-color: #649cf6;
   border-color: #649cf6;
 }
+
+footer {
+  background-color: #333333;
+  text-align: center;
+  color: #fafafa;
+}
+footer p {
+  margin: 0;
+}
+
 /*# sourceMappingURL=master.css.map */
