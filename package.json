@@ -25,10 +25,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amgarrett09/image-to-sound.git"
+    "url": "git+https://github.com/amgarrett09/Audible-Sights.git"
   },
   "bugs": {
-    "url": "https://github.com/amgarrett09/image-to-sound/issues"
+    "url": "https://github.com/amgarrett09/Audible-Sights/issues"
   },
-  "homepage": "https://github.com/amgarrett09/image-to-sound#readme"
+  "homepage": "https://github.com/amgarrett09/Audible-Sights#readme"
 }
