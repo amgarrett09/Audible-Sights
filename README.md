@@ -22,4 +22,4 @@ Additionally, there are physical limits to how well humans can distinguish betwe
 
 ## License
 
-This app is licensed under the [MIT License](https://opensource.org/licenses/MIT)
+This app is licensed under the [MIT License](https://github.com/amgarrett09/Audible-Sights/blob/master/LICENSE.md)
