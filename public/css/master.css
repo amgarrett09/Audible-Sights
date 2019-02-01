@@ -110,6 +110,7 @@ footer {
   background-color: #333333;
   text-align: center;
   color: #fafafa;
+  min-height: 100px;
 }
 footer p {
   margin: 0;

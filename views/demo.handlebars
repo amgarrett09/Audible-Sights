@@ -1,29 +1,32 @@
-<section id="image-selector">
-    <div class="container">
-        <p>Click on an image, then press play to hear what it sounds like:</p>
-        <a href="" class="img-link">
-            <img id="img1" src="/static/images/demo/threesquares.png" alt="Three squares on a dark background"></a>
-        <a href="" class="img-link">
-            <img id="img2" src="/static/images/demo/line.png" alt="A line going downwards to the right"></a>
-        <a href="" class="img-link">
-            <img id="img3" src="/static/images/demo/circle.png" alt="A circle on a dark background"></a>
-        <a href="" class="img-link">
-            <img id="img4" src="/static/images/demo/stars.png" alt="Stars on a dark background"></a>
-        <a href="" class="img-link">
-            <img id="img5" src="/static/images/demo/building.png" alt="A building"></a>
-        <a href="" class="img-link">
-            <img id="img6" src="/static/images/demo/earth.png" alt="The earth"></a>
+<main id="content">
+    <section id="image-selector">
+        <div class="container">
+            <h1>Demo</h1>
+            <p>Click on an image, then press play to hear what it sounds like:</p>
+            <a href="" class="img-link">
+                <img id="img1" src="/static/images/demo/threesquares.png" alt="Three squares on a dark background"></a>
+            <a href="" class="img-link">
+                <img id="img2" src="/static/images/demo/line.png" alt="A line going downwards to the right"></a>
+            <a href="" class="img-link">
+                <img id="img3" src="/static/images/demo/circle.png" alt="A circle on a dark background"></a>
+            <a href="" class="img-link">
+                <img id="img4" src="/static/images/demo/stars.png" alt="Stars on a dark background"></a>
+            <a href="" class="img-link">
+                <img id="img5" src="/static/images/demo/building.png" alt="A building"></a>
+            <a href="" class="img-link">
+                <img id="img6" src="/static/images/demo/earth.png" alt="The earth"></a>
 
-        <div class="canvas-div" style="display: none">
-            <p>Active image:</p>
-            <canvas width="128" height="64"></canvas>
-        </div>
+            <div class="canvas-div" style="display: none">
+                <p>Active image:</p>
+                <canvas width="128" height="64"></canvas>
+            </div>
 
-        <div class="audio-controls" style="display: none">
-            <button id="play-button">Play</button>
-            <button id="stop-button">Stop</button>
+            <div class="audio-controls" style="display: none">
+                <button id="play-button">Play</button>
+                <button id="stop-button">Stop</button>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+</main>
 
 <script type="module" src="/static/js/demo.js"></script>
