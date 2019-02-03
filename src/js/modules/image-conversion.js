@@ -1,4 +1,4 @@
-export class AudioState {
+class AudioState {
     constructor(canvas, minPitch, maxPitch) {
         if (minPitch == 0 || maxPitch == 0) {
             throw new Error("minPitch and maxPitch must not be zero");
@@ -13,7 +13,9 @@ export class AudioState {
         this.gainValues = createGains(canvas);
         this.pitches = createPitches(this.height, minPitch, maxPitch);
         this.synths = this.pitches.map(() => this.audioCtx.createOscillator());
-        this.gainControllers = this.pitches.map(() => this.audioCtx.createGain());
+        this.gainControllers = this.pitches.map(() =>
+            this.audioCtx.createGain()
+        );
         this.masterGain = this.audioCtx.createGain();
         this.interval = 1000 / this.width;
         this.audioPlaying = false;
@@ -91,7 +93,7 @@ export class AudioState {
 /* Takes a canvas and returns an array of gain values (generated from the luma
     of each pixed of the canvas). Indexes can be generated from rows and columns
     with the formula: [ROWS * column + row]*/
-export function createGains(canvas) {
+function createGains(canvas) {
     const cols = canvas.width;
     const rows = canvas.height;
     const ctx = canvas.getContext("2d");
@@ -119,7 +121,7 @@ export function createGains(canvas) {
 
 /* Returns a list of pitches in descending order from maxPitch to minPitch.
 The number of pitches is based on the height the image. */
-export function createPitches(height, minPitch, maxPitch) {
+function createPitches(height, minPitch, maxPitch) {
     let baseInterval;
     if (height <= 2) {
         baseInterval = 1;
@@ -141,3 +143,5 @@ export function createPitches(height, minPitch, maxPitch) {
 
     return output;
 }
+
+module.exports = { AudioState, createGains, createPitches };

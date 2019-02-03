@@ -1,4 +1,4 @@
-import { AudioState } from "./image-conversion.js";
+const { AudioState } = require("./modules/image-conversion.js")
 
 let audioState;
 
