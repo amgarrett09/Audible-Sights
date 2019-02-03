@@ -1,4 +1,4 @@
-import { createGains, createPitches } from "../public/js/image-conversion.js";
+const { createGains, createPitches } = require("../src/js/modules/image-conversion.js");
 const { createCanvas, loadImage } = require("canvas");
 
 test("test createGains function", async () => {
