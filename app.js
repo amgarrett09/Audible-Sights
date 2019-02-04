@@ -64,8 +64,12 @@ app.get("/upload", csrfMiddleware, (req, res) => {
 });
 
 app.get("/play-image", (req, res) => {
+    if (!req.query.image) {
+        res.redirect("/upload");
+        return;
+    }
+
     const fileName = req.query.img;
-    const time = req.query.time;
     res.render("play-image", { fileName: fileName });
 });
 
@@ -79,6 +83,11 @@ app.post("/play-image", parseBody, csrfMiddleware, (req, res) => {
         const fileName = req.file.filename;
         res.redirect(`/play-image?img=${fileName}`);
     });
+});
+
+// 404 route, always the last one
+app.get("*", (req, res) => {
+    res.status(404).send("404 File Not Found");
 });
 
 app.listen(port, () => {
