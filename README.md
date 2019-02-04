@@ -16,7 +16,7 @@ Once each pixel has been associated with a pitch and a volume, the image is scan
 
 ## Limitations
 
-Right now, the app can only process images up to 128 x 64 in resolution. In principle, the image processing algorithm could process larger images, but the bottleneck is actually the Web Audio API, which I have limited control over. At higher resolutions, the Web Audio API starts to run into performance problems when it tries to play back the sound.
+Right now, the app can only process images up to 128 x 64 in resolution. In principle, the image processing algorithm could process larger images, but the bottleneck seems to be the browser itself.
 
 Additionally, there are physical limits to how well humans can distinguish between pitches that are close together. At much higher resolutions, the user wouldn't be able to glean much more information from the sound anyway.
 
