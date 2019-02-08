@@ -74,17 +74,19 @@ nav {
     background-color: $bgcolor-secondary;
     color: $bgcolor-primary;
 
-    button {
+    .how-it-works_link {
         background-color: $bgcolor-primary;
         border-radius: 5px;
         border: solid $bgcolor-primary 2px;
-        font-size: 1.8rem;
+        color: black;
+        font-size: 1.6rem;
         padding: 5px 10px 5px 10px;
         position: relative;
         left: 10%;
         width: 250px;
+        text-decoration: none;
     }
-    button:hover {
+    .how-it-works_link:hover {
         animation: hover-anim 0.1s linear;
         animation-fill-mode: forwards;
     }
@@ -130,4 +132,32 @@ footer {
      p {
          margin: 0;
      }
+}
+
+@media (max-width: 540px) {
+    nav {
+        display: block;
+        text-align: center;
+
+        .links {
+            margin-top: 3%;
+            a {
+                font-size: 1.6rem;
+            }
+        }
+    }
+}
+
+@media (max-width: 340px) {
+    nav {
+        .links {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            a {
+                font-size: 1.4rem;
+            }
+        }
+    }
 }
