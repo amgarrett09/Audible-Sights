@@ -64,7 +64,7 @@ app.get("/upload", csrfMiddleware, (req, res) => {
 });
 
 app.get("/play-image", (req, res) => {
-    if (!req.query.image) {
+    if (!req.query.img) {
         res.redirect("/upload");
         return;
     }
@@ -85,7 +85,7 @@ app.post("/play-image", parseBody, csrfMiddleware, (req, res) => {
     });
 });
 
-// 404 route, always the last one
+//n404 route, always the last one
 app.get("*", (req, res) => {
     res.status(404).send("404 File Not Found");
 });

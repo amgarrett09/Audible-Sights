@@ -1,4 +1,7 @@
-const { AudioState, createGains } = require("./modules/image-conversion.js")
+const { AudioState, createGains } = require("./modules/image-conversion.js");
+
+// Change page title
+document.querySelector("title").innerText = "Audible Sights - Demo";
 
 let audioState;
 

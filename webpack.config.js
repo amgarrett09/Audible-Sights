@@ -2,7 +2,8 @@ module.exports = {
     mode: "production",
     entry: {
         demo: "./src/js/demo.js",
-        playImage: "./src/js/playImage.js"
+        playImage: "./src/js/playImage.js",
+        upload: "./src/js/upload.js"
     },
     output: {
         filename: '[name].js',
