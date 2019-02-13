@@ -1,4 +1,4 @@
-# image-to-sound
+# Audible Sights
 
 Modern research on neuroplasticity has indicated that in blind individuals, the brain can reroute non-visual sense information to the visual cortex, effectively enabling people to see by other means ([Here's a link to one such study](https://www.ncbi.nlm.nih.gov/pubmed/8606771)). This app draws inspiration from some of that research.
 
