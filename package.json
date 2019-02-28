@@ -9,7 +9,7 @@
     "scripts": {
         "test": "jest",
         "prestart": "webpack --config webpack.config.js; sass src/sass/master.scss public/css/master.css",
-        "start": "nodemon"
+        "start": "node app.js"
     },
     "author": "Alex Garrett",
     "license": "MIT",
