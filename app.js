@@ -5,7 +5,7 @@ const csurf = require("csurf");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 80;
 
 // file uploading with multer
 const multer = require("multer");

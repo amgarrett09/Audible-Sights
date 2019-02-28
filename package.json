@@ -1,6 +1,9 @@
 {
+    "engines": {
+        "node": "10.x"
+    },
     "name": "image-to-sound",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "A web app which maps the spatial information in an image to sound",
     "main": "app.js",
     "scripts": {
