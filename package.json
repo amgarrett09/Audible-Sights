@@ -8,7 +8,7 @@
     "main": "app.js",
     "scripts": {
         "test": "jest",
-        "prestart": "webpack --config webpack.config.js; sass src/sass/master.scss public/css/master.css",
+        "build": "webpack --config webpack.config.js; sass src/sass/master.scss public/css/master.css",
         "start": "node app.js"
     },
     "author": "Alex Garrett",
