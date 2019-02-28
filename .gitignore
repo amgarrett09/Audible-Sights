@@ -1,5 +1,4 @@
 /node_modules
-/public/images
 npm-debug.log
 .DS_Store
 /*.env
