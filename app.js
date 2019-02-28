@@ -5,7 +5,7 @@ const csurf = require("csurf");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000
 
 // file uploading with multer
 const multer = require("multer");
@@ -85,7 +85,7 @@ app.post("/play-image", parseBody, csrfMiddleware, (req, res) => {
     });
 });
 
-//n404 route, always the last one
+//404 route, always the last one
 app.get("*", (req, res) => {
     res.status(404).send("404 File Not Found");
 });
